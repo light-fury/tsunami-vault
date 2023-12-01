@@ -6,6 +6,7 @@
     "deploy:goerli": "npx hardhat run ./scripts/deploy.ts --network goerli",
     "deploy:mainnet": "npx hardhat run ./scripts/deploy.ts --network mainnet",
     "compile": "hardhat compile",
+    "coverage": "hardhat coverage",
     "test": "hardhat test"
   },
   "devDependencies": {

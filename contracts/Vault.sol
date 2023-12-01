@@ -6,17 +6,11 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
-import "hardhat/console.sol";
 
 /**
  * @dev Error indicating the token is not whitelisted.
  */
 error TokenNotWhitelisted();
-
-/**
- * @dev Error indicating the transfer transactions was not successful.
- */
-error InvalidTransfer();
 
 /**
  * @dev Error indicating the balance of the user is insufficient to withdraw.
@@ -82,13 +76,7 @@ contract Vault is Ownable, AccessControl, Pausable {
      * @notice Only available when the contract is not paused and the token is whitelisted.
      */
     function deposit(address token, uint256 amount) external whenNotPaused onlyWhitelisted(token) {
-        IERC20 erc20Token = IERC20(token);
-
-        uint256 originalBalance = erc20Token.balanceOf(address(this));
-        erc20Token.safeTransferFrom(_msgSender(), address(this), amount);
-        uint256 currentBalance = erc20Token.balanceOf(address(this));
-
-        if (currentBalance != originalBalance + amount) revert InvalidTransfer();
+        IERC20(token).safeTransferFrom(_msgSender(), address(this), amount);
 
         balances[token][_msgSender()] += amount;
         emit Deposit(_msgSender(), token, amount);
@@ -101,15 +89,9 @@ contract Vault is Ownable, AccessControl, Pausable {
      * @notice Only available when the contract is not paused and the token is whitelisted.
      */
     function withdraw(address token, uint256 amount) external whenNotPaused onlyWhitelisted(token) {
-        IERC20 erc20Token = IERC20(token);
-
         if (balances[token][_msgSender()] < amount) revert InsufficientBalance();
 
-        uint256 originalBalance = erc20Token.balanceOf(address(this));
         IERC20(token).safeTransfer(_msgSender(), amount);
-        uint256 currentBalance = erc20Token.balanceOf(address(this));
-
-        if (currentBalance != originalBalance - amount) revert InvalidTransfer();
 
         balances[token][_msgSender()] -= amount;
         emit Withdrawal(_msgSender(), token, amount);

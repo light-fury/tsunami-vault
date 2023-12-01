@@ -63,11 +63,29 @@ This smart contract, named Vault, is designed to manage deposits and withdrawals
     ```bash
     npx hardhat run scripts/deploy.js --network localhost
     ```
+    Or 
+    ```bash
+    npm run deploy:development
+    ```
 
-4. Deploy the contract to the Ethereum Mainnet:
+4. Deploy the contract to the local Hardhat Network for testing:
+
+    ```bash
+    npx hardhat run scripts/deploy.js --network goerli
+    ```
+    Or 
+    ```bash
+    npm run deploy:goerli
+    ```
+
+5. Deploy the contract to the Ethereum Mainnet:
 
     ```bash
     npx hardhat run scripts/deploy.js --network mainnet
+    ```
+    Or 
+    ```bash
+    npm run deploy:mainnet
     ```
 
 #### Interacting with the Contract
@@ -114,6 +132,21 @@ Run the unit tests using Hardhat:
 
 ```bash
 npx hardhat test
+```
+Or
+```bash
+npm run test
+```
+
+To check the coverage
+
+```bash
+npx hardhat coverage
+```
+Or
+
+```bash
+npm run coverage
 ```
 
 ### Contributing
